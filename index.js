@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGO_URI, {
 });
 
 mongoose.connection.on("connected", () => {
-  console.log("Connected to datase");
+  console.log("Connected to database");
 });
 
 app.listen(port, () => {
@@ -28,6 +28,7 @@ const job = new CronJob(
     updateDBMovies();
   },
   null,
-  true,
+  false,
   "America/Bogota"
 );
+job.start();
