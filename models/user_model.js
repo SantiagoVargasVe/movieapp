@@ -57,3 +57,5 @@ userSchema.statics = {
     user.save();
   },
 };
+
+const User = (module.exports = mongoose.model("User", userSchema));
