@@ -1,11 +1,10 @@
 const User = require("../models/user_model");
 
-exports.create = function (req, res) {
-  User.create(req.body, function (err, result) {
-    if (!err) {
-      return res.json(result);
-    } else {
-      return res.send(err);
-    }
-  });
+exports.create = async function (req, res) {
+  let { response, success } = await User.create(req.body);
+  if (success) {
+    res.json(response);
+  } else {
+    res.json({ error: response });
+  }
 };

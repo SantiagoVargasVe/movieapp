@@ -14,9 +14,11 @@ const movieSchema = new Schema(
 
 const userSchema = new Schema({
   movies_suscription: [movieSchema],
+
   name: { type: String, required: true },
   lastname: { type: String, required: true },
   password: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   createdAt: { type: Date, required: false, default: Date.now },
 });
 
@@ -50,11 +52,22 @@ userSchema.statics = {
     this.findOneAndRemove(removeData, callback);
   },
   create: async function (user) {
-    let { name, lastname, password } = user;
+    let { name, lastname, password, email } = user;
     let salt = bcrypt.genSaltSync(10);
     let hashed_password = bcrypt.hashSync(password, salt);
-    user = new this({ name, lastname, password: hashed_password });
-    user.save();
+    user = new this({ name, email, lastname, password: hashed_password });
+    try {
+      let newUser = await user.save();
+      console.log("Llegue hasta acá");
+      console.log(newUser);
+      return { success: true, response: newUser };
+    } catch (error) {
+      let errorMessage =
+        error.name == "MongoError"
+          ? "email already exists"
+          : "Error in database";
+      return { success: false, response: errorMessage };
+    }
   },
 };
 

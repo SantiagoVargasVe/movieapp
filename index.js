@@ -5,10 +5,15 @@ const CronJob = require("cron").CronJob;
 const { updateDBMovies } = require("./utils/upcoming");
 
 const app = express();
+
+app.use(express.urlencoded({ extended: false }));
+
+app.use(express.json());
 const port = process.env.PORT || 8080;
 const router = express.Router();
 app.use("/api", router);
 require("./routes/movie_api")(router);
+require("./routes/user")(router);
 mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
